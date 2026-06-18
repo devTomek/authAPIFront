@@ -129,7 +129,9 @@ export default function AuthForm() {
             htmlFor="email"
           >
             <span>Email</span>
-            <span className="font-normal text-slate-400">(a@a.pl)</span>
+            {!isRegistering && (
+              <span className="font-normal text-slate-400">(a@a.pl)</span>
+            )}
           </label>
           <input
             className={`rounded-lg border p-3 ${
@@ -149,7 +151,9 @@ export default function AuthForm() {
             htmlFor="password"
           >
             <span>Password</span>
-            <span className="font-normal text-slate-400">(a)</span>
+            {!isRegistering && (
+              <span className="font-normal text-slate-400">(a)</span>
+            )}
           </label>
           <input
             className={`rounded-lg border p-3 ${
