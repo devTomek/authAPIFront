@@ -193,25 +193,27 @@ export default function UsersList({ usersPromise }: UsersListProps) {
             <div>
               <div className="flex items-center justify-between gap-4">
                 <span>{user.email}</span>
-                <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-                  <Button
-                    className="px-3 py-2 text-sm"
-                    variant="outline"
-                    type="button"
-                    onClick={() => startEditing(user)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    className="px-3 py-2 text-sm"
-                    variant="danger"
-                    type="button"
-                    disabled={deletingUserId === user.id}
-                    onClick={() => deleteUser(user)}
-                  >
-                    {deletingUserId === user.id ? "Deleting..." : "Delete"}
-                  </Button>
-                </div>
+                {user.email !== "a@a.pl" && (
+                  <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                    <Button
+                      className="px-3 py-2 text-sm"
+                      variant="outline"
+                      type="button"
+                      onClick={() => startEditing(user)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="px-3 py-2 text-sm"
+                      variant="danger"
+                      type="button"
+                      disabled={deletingUserId === user.id}
+                      onClick={() => deleteUser(user)}
+                    >
+                      {deletingUserId === user.id ? "Deleting..." : "Delete"}
+                    </Button>
+                  </div>
+                )}
               </div>
               {deleteError?.userId === user.id && (
                 <p className="mt-2 text-sm text-red-700">
