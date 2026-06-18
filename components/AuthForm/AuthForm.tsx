@@ -31,13 +31,9 @@ export default function AuthForm() {
     setMessage("");
     setIsError(false);
 
-    if (!isRegistering) {
-      setMessage("Login will be connected in the next step.");
-      return;
-    }
-
     try {
-      const response = await fetch("/api/users", {
+      const endpoint = isRegistering ? "/api/users" : "/api/auth/login";
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -47,10 +43,12 @@ export default function AuthForm() {
       if (!response.ok) {
         const errorMessage = Array.isArray(data.message)
           ? data.message.join(", ")
-          : data.message || "Could not create the user.";
+          : data.error ||
+            data.message ||
+            (isRegistering ? "Could not create the user." : "Could not log in.");
 
-        if (response.status === 409) {
-          setError("email", { message: data.error });
+        if (isRegistering && response.status === 409) {
+          setError("email", { message: errorMessage });
           return;
         }
 
@@ -61,7 +59,9 @@ export default function AuthForm() {
 
       reset();
       setIsError(false);
-      setMessage("User created successfully.");
+      setMessage(
+        isRegistering ? "User created successfully." : "Logged in successfully.",
+      );
     } catch (error) {
       setIsError(true);
       setMessage(
