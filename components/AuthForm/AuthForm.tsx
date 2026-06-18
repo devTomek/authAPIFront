@@ -65,7 +65,7 @@ export default function AuthForm() {
       if (isRegistering) {
         setMessage("User created successfully.");
       } else {
-        router.push("/users");
+        router.push("/auth/users");
       }
     } catch (error) {
       setIsError(true);
