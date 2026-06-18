@@ -5,12 +5,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const authSchema = z.object({
+const authFormSchema = z.object({
   email: z.email(),
   password: z.string().trim().min(1, "Password is required"),
 });
 
-type AuthFormData = z.infer<typeof authSchema>;
+type AuthFormData = z.infer<typeof authFormSchema>;
 
 export default function AuthForm() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -24,7 +24,7 @@ export default function AuthForm() {
     clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(authFormSchema),
   });
 
   async function onSubmit(formData: AuthFormData) {
