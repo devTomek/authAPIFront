@@ -124,8 +124,12 @@ export default function AuthForm() {
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <label className="mt-2 text-sm font-bold" htmlFor="email">
-            Email
+          <label
+            className="mt-2 flex items-center justify-between text-sm font-bold"
+            htmlFor="email"
+          >
+            <span>Email</span>
+            <span className="font-normal text-slate-400">(a@a.pl)</span>
           </label>
           <input
             className={`rounded-lg border p-3 ${
@@ -140,8 +144,12 @@ export default function AuthForm() {
             <p className="text-sm text-red-700">{errors.email.message}</p>
           )}
 
-          <label className="mt-2 text-sm font-bold" htmlFor="password">
-            Password
+          <label
+            className="mt-2 flex items-center justify-between text-sm font-bold"
+            htmlFor="password"
+          >
+            <span>Password</span>
+            <span className="font-normal text-slate-400">(a)</span>
           </label>
           <input
             className={`rounded-lg border p-3 ${
