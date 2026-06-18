@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,6 +14,7 @@ const authFormSchema = z.object({
 type AuthFormData = z.infer<typeof authFormSchema>;
 
 export default function AuthForm() {
+  const router = useRouter();
   const [isRegistering, setIsRegistering] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -59,9 +61,12 @@ export default function AuthForm() {
 
       reset();
       setIsError(false);
-      setMessage(
-        isRegistering ? "User created successfully." : "Logged in successfully.",
-      );
+
+      if (isRegistering) {
+        setMessage("User created successfully.");
+      } else {
+        router.push("/users");
+      }
     } catch (error) {
       setIsError(true);
       setMessage(
