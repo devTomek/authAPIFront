@@ -26,6 +26,11 @@ export default function UsersList({ usersPromise }: UsersListProps) {
   const initialUsers = use(usersPromise);
   const [users, setUsers] = useState(initialUsers);
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
+  const [deleteError, setDeleteError] = useState<{
+    userId: number;
+    message: string;
+  } | null>(null);
   const [message, setMessage] = useState("");
   const {
     register,
@@ -82,6 +87,44 @@ export default function UsersList({ usersPromise }: UsersListProps) {
       cancelEditing();
     } catch {
       setMessage("Could not update the user.");
+    }
+  }
+
+  async function deleteUser(user: User) {
+    const confirmed = window.confirm(`Delete ${user.email}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingUserId(user.id);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMessage = Array.isArray(data.message)
+          ? data.message.join(", ")
+          : data.error || data.message || "Could not delete the user.";
+
+        setDeleteError({ userId: user.id, message: errorMessage });
+        return;
+      }
+
+      setUsers((currentUsers) =>
+        currentUsers.filter((currentUser) => currentUser.id !== user.id),
+      );
+    } catch {
+      setDeleteError({
+        userId: user.id,
+        message: "Could not delete the user.",
+      });
+    } finally {
+      setDeletingUserId(null);
     }
   }
 
@@ -147,16 +190,34 @@ export default function UsersList({ usersPromise }: UsersListProps) {
               </div>
             </form>
           ) : (
-            <div className="flex items-center justify-between gap-4">
-              <span>{user.email}</span>
-              <Button
-                className="px-3 py-2 text-sm opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
-                variant="outline"
-                type="button"
-                onClick={() => startEditing(user)}
-              >
-                Edit
-              </Button>
+            <div>
+              <div className="flex items-center justify-between gap-4">
+                <span>{user.email}</span>
+                <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                  <Button
+                    className="px-3 py-2 text-sm"
+                    variant="outline"
+                    type="button"
+                    onClick={() => startEditing(user)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    className="px-3 py-2 text-sm"
+                    variant="danger"
+                    type="button"
+                    disabled={deletingUserId === user.id}
+                    onClick={() => deleteUser(user)}
+                  >
+                    {deletingUserId === user.id ? "Deleting..." : "Delete"}
+                  </Button>
+                </div>
+              </div>
+              {deleteError?.userId === user.id && (
+                <p className="mt-2 text-sm text-red-700">
+                  {deleteError.message}
+                </p>
+              )}
             </div>
           )}
         </li>

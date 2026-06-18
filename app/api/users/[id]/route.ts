@@ -40,3 +40,31 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const token = (await cookies()).get("access_token")?.value;
+    const response = await fetch(`${process.env.AUTH_API_URL}/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      return Response.json(data, { status: response.status });
+    }
+
+    return new Response(null, { status: 204 });
+  } catch {
+    return Response.json(
+      { message: "Could not delete the user." },
+      { status: 500 },
+    );
+  }
+}
