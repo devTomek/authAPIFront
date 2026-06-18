@@ -27,5 +27,12 @@ export default async function ProtectedUsersPage() {
 
   const usersPromise = getProtectedUsers(token);
 
-  return <UsersPage title="Protected users" usersPromise={usersPromise} />;
+  return (
+    <UsersPage
+      title="Protected users"
+      route="/auth/users"
+      canManageUsers={true}
+      usersPromise={usersPromise}
+    />
+  );
 }

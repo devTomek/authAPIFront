@@ -83,6 +83,15 @@ export default function AuthForm() {
     setMessage("");
   }
 
+  async function viewPublicUsers() {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    router.push("/users");
+    router.refresh();
+  }
+
   return (
     <section className="grid min-h-screen place-items-center bg-slate-100 p-6">
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8">
@@ -191,6 +200,17 @@ export default function AuthForm() {
             {message}
           </p>
         )}
+
+        <div className="mt-6 border-t border-slate-200 pt-6 text-center">
+          <p className="text-sm text-slate-500">Want to skip the demo login?</p>
+          <button
+            className="mt-1 cursor-pointer text-sm font-bold text-emerald-700 hover:underline"
+            type="button"
+            onClick={viewPublicUsers}
+          >
+            See users without logging in
+          </button>
+        </div>
       </div>
     </section>
   );

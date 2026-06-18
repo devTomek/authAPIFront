@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { use, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import Button from "@/components/Button/Button";
 
@@ -13,6 +14,7 @@ export type User = {
 
 interface UsersListProps {
   usersPromise: Promise<User[]>;
+  canManageUsers: boolean;
 }
 
 const updateUserSchema = z.object({
@@ -22,7 +24,10 @@ const updateUserSchema = z.object({
 
 type UpdateUserData = z.infer<typeof updateUserSchema>;
 
-export default function UsersList({ usersPromise }: UsersListProps) {
+export default function UsersList({
+  usersPromise,
+  canManageUsers,
+}: UsersListProps) {
   const initialUsers = use(usersPromise);
   const [users, setUsers] = useState(initialUsers);
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
@@ -42,6 +47,11 @@ export default function UsersList({ usersPromise }: UsersListProps) {
   });
 
   function startEditing(user: User) {
+    if (!canManageUsers) {
+      toast.error("You have to log in for that operation.");
+      return;
+    }
+
     setEditingUserId(user.id);
     setMessage("");
     reset({ email: user.email, password: "" });
@@ -91,6 +101,11 @@ export default function UsersList({ usersPromise }: UsersListProps) {
   }
 
   async function deleteUser(user: User) {
+    if (!canManageUsers) {
+      toast.error("You have to log in for that operation.");
+      return;
+    }
+
     const confirmed = window.confirm(`Delete ${user.email}?`);
 
     if (!confirmed) {

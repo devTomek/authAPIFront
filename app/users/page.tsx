@@ -16,5 +16,12 @@ async function getUsers(): Promise<User[]> {
 export default function PublicUsersPage() {
   const usersPromise = getUsers();
 
-  return <UsersPage title="Users" usersPromise={usersPromise} />;
+  return (
+    <UsersPage
+      title="Public users"
+      route="/users"
+      canManageUsers={false}
+      usersPromise={usersPromise}
+    />
+  );
 }
