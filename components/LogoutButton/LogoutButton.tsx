@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Button from "@/components/Button/Button";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -19,13 +20,14 @@ export default function LogoutButton() {
   }
 
   return (
-    <button
-      className="cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
+    <Button
+      variant="outline"
+      className="py-2 text-sm"
       type="button"
       disabled={isLoggingOut}
       onClick={logout}
     >
       {isLoggingOut ? "Logging out..." : "Log out"}
-    </button>
+    </Button>
   );
 }

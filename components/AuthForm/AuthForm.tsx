@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Button from "@/components/Button/Button";
 
 const authFormSchema = z.object({
   email: z.email(),
@@ -168,8 +169,8 @@ export default function AuthForm() {
             <p className="text-sm text-red-700">{errors.password.message}</p>
           )}
 
-          <button
-            className="mt-4 cursor-pointer rounded-lg bg-emerald-700 p-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+          <Button
+            className="mt-4"
             type="submit"
             disabled={isSubmitting}
           >
@@ -178,7 +179,7 @@ export default function AuthForm() {
               : isRegistering
                 ? "Create account"
                 : "Log in"}
-          </button>
+          </Button>
         </form>
 
         {message && (
